@@ -1,0 +1,3 @@
+<template>
+  REGISTER FORM
+</template>
