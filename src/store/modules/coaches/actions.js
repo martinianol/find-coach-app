@@ -1,13 +1,13 @@
 export default {
-  registerCoach(context, data) {
+  registerCoach(context, payload) {
     //const id = "c" + (context.getters.getAll.length+1)
     const newCoach = {
       id: context.rootGetters.userId,
-      firstName: data.first,
-      lastName: data.last,
-      areas: data.areas,
-      description: data.desc,
-      hourlyRate: data.rate
+      firstName: payload.first,
+      lastName: payload.last,
+      areas: payload.areas,
+      description: payload.desc,
+      hourlyRate: payload.rate
     }
     context.commit('addCoach', newCoach); 
   }
