@@ -17,6 +17,7 @@ export default {
   methods: {
     addCoach(formData){
       this.$store.dispatch('coaches/registerCoach', formData);
+      this.$router.push('/coaches');
     }
   }
 }
