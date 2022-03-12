@@ -17,6 +17,7 @@ export default {
     });
 
     if (!response.ok) {
+     
       //We'll do somehting later with later
     }
 
@@ -32,6 +33,8 @@ export default {
 
     if (!response.ok) {
       //We'll do somehting later with later
+      const error = new Error(responseData.message || 'Failed to fetch!')
+      throw error; 
     }    
 
     const coaches = []
