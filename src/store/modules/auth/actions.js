@@ -1,5 +1,5 @@
 require('dotenv').config()
-
+let timer;
 export default {
   async auth (context, payload){
     const mode = payload.mode;
@@ -32,6 +32,8 @@ export default {
     localStorage.setItem('userId', responseData.localId);
     localStorage.setItem('tokenExpiration', expirationDate);
 
+    timer = setTimeout(() => context.dispatch('autoLogout'), expiresIn)
+
     context.commit('setUser', {
       token: responseData.idToken,
       userId: responseData.localId,
@@ -41,6 +43,16 @@ export default {
   tryLogin(context){
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+
+    const expiresIn = +tokenExpiration - new Date().getTime();
+
+    if (expiresIn < 0) {
+      return;
+    }
+
+    setTimeout(()=> context.dispatch('autoLogout'), expiresIn);
+
     if (token && userId) {
       context.commit('setUser', {
         token: token,
@@ -52,10 +64,16 @@ export default {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('tokenExpiration');
+
+    clearTimeout(timer);
     
     context.commit('setUser', {
       userId: null,
       token: null,
     })
+  },
+  autoLogout(context) {
+    context.dispatch('logout');
+    context.commit('setAutoLogout');
   }
 }
