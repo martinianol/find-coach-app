@@ -57,14 +57,11 @@ export default {
       this.isLoading = true;
       const actionPayload = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        mode: this.mode
       }
       try {
-        if (this.mode === 'signup') {
-          await this.$store.dispatch('signup', actionPayload);
-        } else {
-          await this.$store.dispatch('login', actionPayload);
-        }
+        await this.$store.dispatch('auth', actionPayload);
         const redirectUrl = '/' + (this.$route.query.redirect || 'coaches')
         this.$router.replace(redirectUrl)     
       } catch (error) {
