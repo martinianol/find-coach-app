@@ -17,10 +17,10 @@ export default {
 
     if (!response.ok) {
       console.log(responseData)
-      const error = new Error(response.message || 'Failed to authenticate');
+      const error = new Error(response.message || 'Failed to authenticate. Check your login details');
       throw error;
     }
-    
+    console.log(responseData)
 
     context.commit('setUser', {
       token: responseData.idToken,
