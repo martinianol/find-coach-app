@@ -11,7 +11,7 @@ export default {
       hourlyRate: payload.rate
     };
 
-    const response = await fetch(`https://vue-coach-app-4a323-default-rtdb.firebaseio.com/coache/${userId}.json`, {
+    const response = await fetch(`https://vue-coach-app-4a323-default-rtdb.firebaseio.com/coaches/${userId}.json`, {
       method: 'PUT',
       body: JSON.stringify(newCoach)
     });
@@ -31,7 +31,7 @@ export default {
     if(!context.getters.shouldUpdate && !payload.forceRefresh) {
       return;
     }
-    const response = await fetch(`https://vue-coach-app-4a323-default-rtdb.firebaseio.com/coache.json`);
+    const response = await fetch(`https://vue-coach-app-4a323-default-rtdb.firebaseio.com/coaches.json`);
     const responseData = await response.json();
 
     if (!response.ok) {
