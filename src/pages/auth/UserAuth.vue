@@ -1,4 +1,11 @@
 <template>
+<div>
+  <base-dialog :show="!!error" title="An error ocurred" @close="handleError">
+    <p>{{error}}</p>
+  </base-dialog>
+  <base-dialog :show="isLoading" title="Authenticating..." fixed>
+    <base-spinner></base-spinner>
+  </base-dialog>
   <base-card>
     <form @submit.prevent="submitForm">
       <div class="form-control">
@@ -14,6 +21,7 @@
       <base-button type="button" mode="flat" @click="switchAuthMode">{{switchModeButtonCaption}}</base-button>
     </form>
   </base-card>
+</div>
 </template>
 
 <script>
@@ -38,34 +46,38 @@ export default {
     }
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       this.formIsValid = true;
       if (this.email === '' || !this.email.includes('@') || this.password.length < 6 ){
         this.formIsValid = false;
         this.error = 'Please fill the fields correctly'
         return
       }
-     //send http requests to firebade...
-    //Register route
-    if (this.mode === 'signup') {
-      console.log(this.password)
-      this.$store.dispatch('signup', {
-        email: this.email,
-        password: this.password,
-      });
 
-    } else {
-      this.$store.dispatch('login', {
-        email: this.email,
-        passsword: this.password,
-      })
-    }
-    //Login route
-
+      this.isLoading = true;
+      try {
+        if (this.mode === 'signup') {
+          await this.$store.dispatch('signup', {
+            email: this.email,
+            password: this.password,
+          });
+        } else {
+          await this.$store.dispatch('login', {
+            email: this.email,
+            passsword: this.password,
+          })
+        }     
+      } catch (error) {
+        this.error = error.message || 'Failed to authenticate, try later.';
+      }
+      this.isLoading = false;
 
     },
     switchAuthMode() {
-      this.mode === 'login' ? this.mode='signup' : this.mode='login'
+      this.mode === 'login' ? this.mode='signup' : this.mode='login';
+    },
+    handleError() {
+      this.error = null;
     }
   }
 }
