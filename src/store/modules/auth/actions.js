@@ -25,21 +25,37 @@ export default {
       throw error;
     }
 
+    const expiresIn = + responseData.expiresIn * 1000;
+    const expirationDate = new Date().getTime() + expiresIn;
+
     localStorage.setItem('token', responseData.idToken);
     localStorage.setItem('userId', responseData.localId);
+    localStorage.setItem('tokenExpiration', expirationDate);
 
     context.commit('setUser', {
       token: responseData.idToken,
       userId: responseData.localId,
-      tokenExpiration: responseData.expiresIn
     })
 
   },
+  tryLogin(context){
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    if (token && userId) {
+      context.commit('setUser', {
+        token: token,
+        userId: userId,
+      });
+    }
+  },
   logout(context) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('tokenExpiration');
+    
     context.commit('setUser', {
       userId: null,
       token: null,
-      tokenExpiration: null
     })
   }
 }
